@@ -1,7 +1,7 @@
 function [leakage_query_table,normal_query_table] = auto_create_PIRtable(N,K)
 % servers N and messages K 
 % do permutation of 0:N-1 
-Per = perms(0:N-1);
+Per = perms(0:N-1)
 
 % set random key F
 cardi_F = N^(K-1);
@@ -14,7 +14,7 @@ for i = 1:cardi_F
         F(i,1) = dec2base(i-1,N);
     end
 end
-
+F
 % create PIR table 
 normal_query_table = strings(length(Per)*length(F), N, K);
 for k = 1:K
@@ -50,3 +50,4 @@ for i = 1:N
     end
 end
 leakage_query_table(N+1:end,:,:) = normal_query_table;
+
