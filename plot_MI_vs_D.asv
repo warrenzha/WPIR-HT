@@ -16,8 +16,7 @@ for i = 1:K
     D_star = D_star + (1/N)^(i-1);
 end
 
-% D = 1.00:0.02:D_star;
-D = linspace(1.00,D_star,17);
+D = 1.00:0.02:D_star;
 
 % create initial matirx 
 MI_leakage_homo_1 = zeros(size(D));
@@ -38,7 +37,7 @@ for d = 1:length(D)
     % line 2 : weight same symmetric allocation with #
     [MI_leakage_homo_2(d), p_homo_rsame_opt] = auto_compute_MI_adjustp(N,K,r_same,D(d),5,1);
 
-    % line 3 : weight same paper allocation we found with # 
+    % line 3 : weight sampaper allocation we found with # 
     [MI_leakage_homo_3(d), p_homo_rsame_opt] = auto_compute_MI_adjustp(N,K,r_same,D(d),4,1);
 
 end
@@ -46,48 +45,56 @@ end
 %% Hetero
 for d = 1:length(D)
     % line 1 : weight diff optimum without #
-    [MI_leakage_hete_1(d), p_hete_rsame_opt] = auto_compute_MI_adjustp(N,K,r_diff,D(d),0,0);
+    [MI_leakage_hete_1(d), p_homo_rsame_opt] = auto_compute_MI_adjustp(N,K,r_diff,D(d),0,0);
 
     % line 2 : weight diff symmetric allocation with #
-    [MI_leakage_hete_2(d), p_hete_rsame_opt] = auto_compute_MI_adjustp(N,K,r_diff,D(d),5,1);
+    [MI_leakage_hete_2(d), p_homo_rsame_opt] = auto_compute_MI_adjustp(N,K,r_diff,D(d),5,1);
     
     % line 3 : weight diff paper allocation we found with # 
-    [MI_leakage_hete_3(d), p_hete_rsame_opt] = auto_compute_MI_adjustp(N,K,r_diff,D(d),4,1);
+    [MI_leakage_hete_3(d), p_homo_rsame_opt] = auto_compute_MI_adjustp(N,K,r_diff,D(d),4,1);
 
-    % line 4 : weight diff optimum with # 
-    [MI_leakage_hete_4(d), p_hete_rsame_opt] = auto_compute_MI_adjustp(N,K,r_diff,D(d),0,1);
+    % line 4 : 
+    [MI_leakage_4(d), p__rsame_opt] = auto_compute_MI_adjustp(N,K,r_diff,D(d),8,1);
 end
 
 %% plot homo
 figure
 set(gcf,'position',[50, 100, 550, 400])
 set(gcf,'Color',[0.9,0.9,0.9])
-plot(MI_leakage_homo_1,D,'-square','LineWidth',1.2)
+plot(MI_leakage_homo_2,D,'-square','LineWidth',1.2)
 hold on
-plot(MI_leakage_homo_2,D,'-o','LineWidth',1.2)
-hold on
-plot(MI_leakage_homo_3,D,'-*','LineWidth',1.2)
-
+plot(MI_leakage_homo_1,D,'-o','LineWidth',1.2)
 grid on
 xlabel('MI constraint $\rho$','Interpreter','latex')
 ylabel('Download cost $D$','Interpreter','latex')
-legend("Optimal allocation w/o p# ", "Symmetric allocation w/ p#", "Paper allocation w/ p#")
+legend("Optimal allocation w/o p# ", "Paper allocation w/ p#")
 title("Homogeneous case: N = 3, K = 2")
 
 %% plot hetero
+% figure
+% plot(MI_leakage_1,D,'-x')
+% hold on
+% plot(MI_leakage_2,D,'-o')
+% hold on
+% plot(MI_leakage_3,D)
+% % hold on
+% % plot(MaxL_leakage_4,D)
+% xlabel('$\rho$','Interpreter','latex')
+% ylabel('D')
+% legend({"opt w/ p# ", "opt w/o p#","pw uniform"})
+% title("N = 3, K = 2 Heterogeneous case ")
+
+
 figure
 set(gcf,'position',[50, 100, 550, 400])
 set(gcf,'Color',[0.9,0.9,0.9])
-plot(MI_leakage_hete_1,D,'-square','LineWidth',1.2)
+plot(MI_leakage_hete_2,D,'-square','LineWidth',1.2)
 hold on
-plot(MI_leakage_hete_2,D,'-o','LineWidth',1.2)
+plot(MI_leakage_hete_3,D,'-o','LineWidth',1.2)
 hold on
-plot(MI_leakage_hete_3,D,'-*','LineWidth',1.2)
-hold on
-plot(MI_leakage_hete_4,D,'-x','LineWidth',1.2)
-
+plot(MI_leakage_hete_1,D,'-*','LineWidth',1.2)
 grid on
 xlabel('MI constraint $\rho$','Interpreter','latex')
 ylabel('Download cost $D$','Interpreter','latex')
-legend("Optimal allocation w/o p# ", "Symmetric allocation w/ p#", "Paper allocation w/ p#", "Numerical optimum w/ p#")
+legend("Optimal allocation w/o p# ", "Symmetric allocation w/ p#", "Optimal allocation w/ p#")
 title("Heterogeneous case: N = 3, K = 2")

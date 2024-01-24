@@ -16,30 +16,27 @@ for i = 1:K
     D_star = D_star + (1/N)^(i-1);
 end
 
-D = 1.00:0.02:D_star;
+% D = 1.00:0.02:D_star;
+D = linspace(1.00,D_star,17);
 
 % create initial matirx 
 MaxL_leakage_homo_1 = zeros(size(D));
 MaxL_leakage_homo_2 = zeros(size(D));
 MaxL_leakage_homo_3 = zeros(size(D));
-MaxL_leakage_homo_4 = zeros(size(D));
-MaxL_leakage_homo_5 = zeros(size(D));
 
 MaxL_leakage_hete_1 = zeros(size(D));
 MaxL_leakage_hete_2 = zeros(size(D));
 MaxL_leakage_hete_3 = zeros(size(D));
-MaxL_leakage_hete_4 = zeros(size(D));
-MaxL_leakage_hete_5 = zeros(size(D));
 
 %% homo
 for d = 1:length(D)
     % line 1 : weight same optimum without #
     [MaxL_leakage_homo_1(d), p_homo_rsame_opt] = auto_compute_maxL_adjustp(N,K,r_same,D(d),0,0);
 
-    % line 2 : weight same optimum with # and symmetric allocation
+    % line 2 : weight same symmetric allocation with #
     [MaxL_leakage_homo_2(d), p_homo_rsame_opt] = auto_compute_maxL_adjustp(N,K,r_same,D(d),5,1);
 
-    % line 3 : weight same optimum with # and allocation we found
+    % line 3 : weight paper allocation we found with # 
     [MaxL_leakage_homo_3(d), p_homo_rsame_opt] = auto_compute_maxL_adjustp(N,K,r_same,D(d),4,1);
 end
 
@@ -48,10 +45,10 @@ for d = 1:length(D)
     % line 1 : weight same optimum without #
     [MaxL_leakage_hete_1(d), p_hete_rsame_opt] = auto_compute_maxL_adjustp(N,K,r_diff,D(d),0,0);
     
-    % line 2 : weight same optimum with # and symmetric allocation
+    % line 2 : weight same symmetric allocation with #
     [MaxL_leakage_hete_2(d), p_hete_rsame_opt] = auto_compute_maxL_adjustp(N,K,r_diff,D(d),5,1);
 
-    % line 3 : weight same optimum with # and allocation we found
+    % line 3 : weight paper allocation we found with # 
     [MaxL_leakage_hete_3(d), p_hete_rsame_opt] = auto_compute_maxL_adjustp(N,K,r_diff,D(d),4,1);
 end
 
@@ -64,11 +61,9 @@ hold on
 plot(MaxL_leakage_homo_2,D,'-o','LineWidth',1.2)
 hold on
 plot(MaxL_leakage_homo_3,D,'-*','LineWidth',1.2)
-% hold on
-% plot(MaxL_leakage_homo_4,D)
-% hold on
-% plot(MaxL_leakage_homo_5,D)
+
 grid on
+xlim([1 1.7])
 xlabel('Max-L constraint $\rho$','Interpreter','latex')
 ylabel('Download cost $D$','Interpreter','latex')
 legend("Optimal allocation w/o p# ", "Symmetric allocation w/ p#", "Paper allocation w/ p#")
@@ -83,11 +78,9 @@ hold on
 plot(MaxL_leakage_hete_2,D,'-o','LineWidth',1.2)
 hold on
 plot(MaxL_leakage_hete_3,D,'-*','LineWidth',1.2)
-% hold on
-% plot(MaxL_leakage_4,D)
-% hold on
-% plot(MaxL_leakage_5,D)
+
 grid on
+xlim([1 1.42])
 xlabel('Max-L constraint $\rho$','Interpreter','latex')
 ylabel('Download cost $D$','Interpreter','latex')
 legend("Optimal allocation w/o p# ", "Symmetric allocation w/ p#", "Paper allocation w/ p#")

@@ -12,7 +12,7 @@ for i = 1:K
 end
 
 % get query table
-[leakage_table, normal_table] = auto_create_PIRtable(N,K)
+[leakage_table, normal_table] = auto_create_PIRtable(N,K);
 sz_leakage_table = size(leakage_table);
 
 % begin convex problem
@@ -21,59 +21,63 @@ cvx_begin
     if mode == 1 %p0 uniform
         variables p1(N+1+factorial(N)*(N^(K-1)-1),K)
         p = cvx(zeros(sz_leakage_table(1),K));
-
-        %p#
+        % p#
         p(1:N,:) = p1(1:N,:);
-        %p0 uniform part
+        % p0 uniform part
         for k = 1:K 
             p(N+1:N+factorial(N),k) = p1(N+1,k);
         end
         % pw not uniform
         p(N+factorial(N)+1:end,:) = p1(N+2:end,:); 
 
-    elseif mode == 2 % pw uniform (here w means every different w not cardinality)
+    elseif mode == 2 % pf uniform (here w means every different w not cardinality)
         variables p1(N+factorial(N)+(N^(K-1)-1),K)
         p = cvx(zeros(sz_leakage_table(1),K));
-
-        %p#, p0
+        % p#, p0
         p(1:N+factorial(N),:) = p1(1:N+factorial(N),:);
         % pw uniform
         for f = 1:N^(K-1)-1
-        for k = 1:K
-            p(N+factorial(N)+factorial(N)*(f-1)+1:N+factorial(N)+factorial(N)*f,k) = p1(N+factorial(N)+f,k);
-        end
+            for k = 1:K
+                p(N+factorial(N)+factorial(N)*(f-1)+1:N+factorial(N)+factorial(N)*f,k) = p1(N+factorial(N)+f,k);
+            end
         end
     
-    elseif mode == 3 % p0 pw uniform
+    elseif mode == 3 % paper allocation
         variables p1(N+N^(K-1),K)
         p = cvx(zeros(sz_leakage_table(1),K));
-
-        %p#
+        % p#
         p(1:N,:) = p1(1:N,:);
+        % p0 pf uniform
+        for f = 1:N^(K-1)
+            for k = 1:K
+                p(N+factorial(N)*(f-1)+1:N+factorial(N)*f,k) = p1(N+f,k);
+            end
+        end
+        
+    elseif mode == 4 % paper allocation
+        variables p1(N+N^(K-1),K)
+        p = cvx(zeros(sz_leakage_table(1),K));
+        % p#
+        p(1:N,:) = p1(1:N,:);
+        % p0 pf uniform
+        for f = 1:N^(K-1)
+            for k = 1:K
+                p(N+factorial(N)*(f-1)+1:N+factorial(N)*f,k) = p1(N+f,k);
+            end
+        end
+
+    elseif mode == 5 % p0 pw uniform, p# symmetric
+        variables p1(1+N^(K-1),K)
+        p = cvx(zeros(sz_leakage_table(1),K));
+        % p#
+        for f = 1:N
+            p(f,:) = p1(1,:);
+        end
         % p0 pw uniform
         for f = 1:N^(K-1)
-        for k = 1:K
-            p(N+factorial(N)*(f-1)+1:N+factorial(N)*f,k) = p1(N+f,k);
-        end
-        end
-    elseif mode == 4 % reduce p to cyclic permutation only
-        variables p1(N+N^(K),K)
-        p = cvx(zeros(sz_leakage_table(1),K));
-        %p#
-        p(1:N,:) = p1(1:N,:);
-        for f = 1:N^(K)
-        for k = 1:K
-            p(N+factorial(N-1)*(f-1)+1:N+factorial(N-1)*f,k) = p1(N+f,k);
-        end
-        end
-
-    elseif mode == 5 % p# and p only
-        variables p1(N+1,K)
-        p = cvx(zeros(sz_leakage_table(1),K));
-        %p#
-        p(1:N,:) = p1(1:N,:);
-        for k = 1:K
-            p(N+1:end,k) = p1(N+1,k);
+            for k = 1:K
+                p(N+factorial(N)*(f-1)+1:N+factorial(N)*f,k) = p1(1+f,k);
+            end
         end
 
     elseif mode == 6 % p# and p0 and p only
@@ -84,6 +88,24 @@ cvx_begin
         for k = 1:K
             p(N+1:N+factorial(N),k) = p1(N+1,k);
             p(N+factorial(N)+1:end,k) = p1(N+2,k);
+        end
+        
+    elseif mode == 7 % p# and p0 and pw(w = cardinality f) only
+        variables p1(N+K,K)
+        p = cvx(zeros(sz_leakage_table(1),K));
+        % p#
+        p(1:N,:) = p1(1:N,:);
+        % p0
+        for k = 1:K
+            p(N+1:N+factorial(N),k) = p1(N+1,k);
+        end
+        % pw
+        wcount = N+factorial(N)+1;
+        for w = 1:K-1
+            for k = 1:K
+                p(wcount:wcount+factorial(N)*(N-1)*N^(w-1)-1,k) = p1(N+w+1,k);
+            end
+            wcount = wcount+factorial(N)*(N-1)*N^(w-1);
         end
 
     elseif mode == 8 % p0 pw uniform
@@ -97,30 +119,10 @@ cvx_begin
 
         % p0 pw uniform
         for f = 1:N^(K-1)
-        for k = 1:K
-            p(N+factorial(N)*(f-1)+1:N+factorial(N)*f,k) = p1(1+f,k);
+            for k = 1:K
+                p(N+factorial(N)*(f-1)+1:N+factorial(N)*f,k) = p1(1+f,k);
+            end
         end
-        end
-
-    % elseif mode == 7 % p# and p0 and pw(w = cardinality f) only
-    %     variables p1(N+K,K)
-    %     p = cvx(zeros(sz_leakage_table(1),K));
-    %     %p#
-    %     p(1:N,:) = p1(1:N,:);
-    % 
-    %     %p0
-    %     for k = 1:K
-    %         p(N+1:N+factorial(N),k) = p1(N+1,k);
-    %     end
-    % 
-    %     % pw
-    %     wcount = N+factorial(N)+1;
-    %     for w = 1:K-1
-    %         for k = 1:K
-    %             p(wcount:wcount+factorial(N)*(N-1)*N^(w-1)-1,k) = p1(N+w+1,k);
-    %         end
-    %         wcount = wcount+factorial(N)*(N-1)*N^(w-1)
-    %     end
 
     else 
         variables p(sz_leakage_table(1),K)
