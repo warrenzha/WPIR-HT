@@ -17,7 +17,7 @@ for i = 1:K
 end
 
 % D = 1.00:0.02:D_star;
-D = linspace(1.00,D_star,17);
+D = linspace(1.00,D_star,24);
 
 % create initial matirx 
 MI_leakage_homo_1 = zeros(size(D));
@@ -71,7 +71,7 @@ plot(MI_leakage_homo_3,D,'-*','LineWidth',1.2)
 grid on
 xlabel('MI constraint $\rho$','Interpreter','latex')
 ylabel('Download cost $D$','Interpreter','latex')
-legend("Optimal allocation w/o p# ", "Symmetric allocation w/ p#", "Paper allocation w/ p#")
+legend("TSC (w/o p#)", "Symmetric WPIR#", "Optimal WPIR#")
 title("Homogeneous case: N = 3, K = 2")
 
 %% plot hetero
@@ -84,10 +84,11 @@ plot(MI_leakage_hete_2,D,'-o','LineWidth',1.2)
 hold on
 plot(MI_leakage_hete_3,D,'-*','LineWidth',1.2)
 hold on
-plot(MI_leakage_hete_4,D,'-x','LineWidth',1.2)
+plot(MI_leakage_hete_4,D,'-.','LineWidth',1.2)
 
 grid on
+xlim([0 0.08])
 xlabel('MI constraint $\rho$','Interpreter','latex')
 ylabel('Download cost $D$','Interpreter','latex')
-legend("Optimal allocation w/o p# ", "Symmetric allocation w/ p#", "Paper allocation w/ p#", "Numerical optimum w/ p#")
+legend("TSC (w/o p#)", "Symmetric WPIR#", "Optimal WPIR#", "Numerical solution")
 title("Heterogeneous case: N = 3, K = 2")

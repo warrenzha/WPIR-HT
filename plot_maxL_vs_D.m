@@ -23,10 +23,12 @@ D = linspace(1.00,D_star,17);
 MaxL_leakage_homo_1 = zeros(size(D));
 MaxL_leakage_homo_2 = zeros(size(D));
 MaxL_leakage_homo_3 = zeros(size(D));
+MaxL_leakage_homo_4 = zeros(size(D));
 
 MaxL_leakage_hete_1 = zeros(size(D));
 MaxL_leakage_hete_2 = zeros(size(D));
 MaxL_leakage_hete_3 = zeros(size(D));
+MaxL_leakage_homo_4 = zeros(size(D));
 
 %% homo
 for d = 1:length(D)
@@ -50,6 +52,9 @@ for d = 1:length(D)
 
     % line 3 : weight paper allocation we found with # 
     [MaxL_leakage_hete_3(d), p_hete_rsame_opt] = auto_compute_maxL_adjustp(N,K,r_diff,D(d),4,1);
+    
+    % line 4 : numerical optimal allocation we found with # 
+    [MaxL_leakage_hete_4(d), p_hete_rsame_opt] = auto_compute_maxL_adjustp(N,K,r_diff,D(d),0,1);
 end
 
 %% plot homo
@@ -66,7 +71,7 @@ grid on
 xlim([1 1.7])
 xlabel('Max-L constraint $\rho$','Interpreter','latex')
 ylabel('Download cost $D$','Interpreter','latex')
-legend("Optimal allocation w/o p# ", "Symmetric allocation w/ p#", "Paper allocation w/ p#")
+legend("TSC (w/o p#)", "Symmetric WPIR#", "Optimal WPIR#")
 title("Homogeneous case: N = 3, K = 2")
 
 %% plot hetero
@@ -78,10 +83,12 @@ hold on
 plot(MaxL_leakage_hete_2,D,'-o','LineWidth',1.2)
 hold on
 plot(MaxL_leakage_hete_3,D,'-*','LineWidth',1.2)
+hold on
+plot(MaxL_leakage_hete_4,D,'-.','LineWidth',1.2)
 
 grid on
 xlim([1 1.42])
 xlabel('Max-L constraint $\rho$','Interpreter','latex')
 ylabel('Download cost $D$','Interpreter','latex')
-legend("Optimal allocation w/o p# ", "Symmetric allocation w/ p#", "Paper allocation w/ p#")
+legend("TSC (w/o p#)", "Symmetric WPIR#", "Optimal WPIR#", "Numerical solution")
 title("Heterogeneous case: N = 3, K = 2")
