@@ -17,7 +17,7 @@ for i = 1:K
 end
 
 % D = 1.00:0.02:D_star;
-D = linspace(1.00,D_star,24);
+D = linspace(1.00,D_star,17);
 
 % create initial matirx 
 MI_leakage_homo_1 = zeros(size(D));
@@ -40,7 +40,9 @@ for d = 1:length(D)
 
     % line 3 : weight same paper allocation we found with # 
     [MI_leakage_homo_3(d), p_homo_rsame_opt] = auto_compute_MI_adjustp(N,K,r_same,D(d),4,1);
-
+    
+    % line 3 : weight same paper allocation we found with # 
+    [MI_leakage_homo_4(d), p_homo_rsame_opt] = auto_compute_MI_adjustp(N,K,r_same,D(d),0,1);
 end
 
 %% Hetero
@@ -55,7 +57,7 @@ for d = 1:length(D)
     [MI_leakage_hete_3(d), p_hete_rsame_opt] = auto_compute_MI_adjustp(N,K,r_diff,D(d),4,1);
 
     % line 4 : weight diff optimum with # 
-    [MI_leakage_hete_4(d), p_hete_rsame_opt] = auto_compute_MI_adjustp(N,K,r_diff,D(d),0,1);
+    [MI_leakage_hete_4(d), p_hete_rsame_opt] = auto_compute_MI_adjustp(N,K,r_diff,D(d),4,1);
 end
 
 %% plot homo
@@ -67,11 +69,14 @@ hold on
 plot(MI_leakage_homo_2,D,'-o','LineWidth',1.2)
 hold on
 plot(MI_leakage_homo_3,D,'-*','LineWidth',1.2)
+hold on
+plot(MI_leakage_homo_4,D,'-.','LineWidth',1.2)
 
 grid on
+xlim([0 0.3])
 xlabel('MI constraint $\rho$','Interpreter','latex')
 ylabel('Download cost $D$','Interpreter','latex')
-legend("TSC (w/o p#)", "Symmetric WPIR#", "Optimal WPIR#")
+legend("TSC (w/o p#)", "Symmetric WPIR#", "Optimal WPIR#", "Numerical solution")
 title("Homogeneous case: N = 3, K = 2")
 
 %% plot hetero
