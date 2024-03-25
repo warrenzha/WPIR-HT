@@ -10,6 +10,8 @@ for i = 1:K
     D_star = D_star + (N*exp(epsilon))^(1-i);
 end
 
+D_upper = 1 + (N^(K-1)-1) / ((N-1)*(exp(epsilon)+N^(K-1)-1));
+
 
 % get query table
 [leakage_table, normal_table] = auto_create_PIRtable(N,K);
@@ -59,3 +61,4 @@ cvx_end
 download = D;
 p
 D_star
+D_upper
