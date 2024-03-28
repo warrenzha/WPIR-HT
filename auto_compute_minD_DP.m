@@ -1,4 +1,4 @@
-function [download] = auto_compute_minD_DP(N,K,epsilon)
+function [download] = auto_compute_minD_DP(N,K,epsilon,mode)
 % Given leakage constriant L1, L2, ... LN
 % minimize D
 % varaibles : p 
@@ -12,7 +12,6 @@ end
 
 D_upper = 1 + (N^(K-1)-1) / ((N-1)*(exp(epsilon)+N^(K-1)-1));
 
-
 % get query table
 [leakage_table, normal_table] = auto_create_PIRtable(N,K);
 sz_normal_table = size(normal_table);
@@ -21,7 +20,17 @@ q_numb_normal = N^K;
 cvx_begin
     L = cvx(zeros(N,1));
     same_q_prob = cvx(zeros(q_numb_normal,K,N));
-    variables p(sz_normal_table(1),K) D
+    if mode == 1 % p0 pf uniform
+        variables p1(N^(K-1),K) D
+        p = cvx(zeros(sz_normal_table(1),K));
+
+        % p0 pw uniform
+        for f = 1:N^(K-1)
+        for k = 1:K
+            p(factorial(N)*(f-1)+1:factorial(N)*f,k) = p1(f,k);
+        end
+        end
+    end
     % compute leakage Li 
     for i = 1:N
         search_table = normal_table(:,i,:);
@@ -49,7 +58,7 @@ cvx_begin
     subject to 
         p >= 0;
         sum(p,1) == 1;
-        N-sum(p(1:factorial(N),:),1) == (N-1)*D;
+        N-sum(p(1:factorial(N),:),1) <= (N-1)*D;
         for k1 = 1:K
             for k2 = 1:K
                 if k1 ~= k2
@@ -60,5 +69,3 @@ cvx_begin
 cvx_end
 download = D;
 p
-D_star
-D_upper
