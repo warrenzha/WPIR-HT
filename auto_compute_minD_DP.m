@@ -30,6 +30,8 @@ cvx_begin
             p(factorial(N)*(f-1)+1:factorial(N)*f,k) = p1(f,k);
         end
         end
+    else
+        variables p(sz_normal_table(1),K) D
     end
     % compute leakage Li 
     for i = 1:N
