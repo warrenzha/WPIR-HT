@@ -1,6 +1,6 @@
 %% general N K case
 N = 3;
-K = 3;
+K = 10;
 F = K;
 epsilon = 1;
 dp = exp(epsilon);
@@ -43,6 +43,9 @@ lb = zeros(1,F);
 p
 fval
 D = (1/(N-1))*(N-factorial(N)*p(1))
+
+D_reduced = N/(N-1) - exp(epsilon*(K-1)) / (N-1) / (exp(epsilon)+N-1)^(K-1)
+
 lambda.ineqlin
 % lambda.eqlin
 % lambda.lower

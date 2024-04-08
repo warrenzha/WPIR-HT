@@ -5,14 +5,14 @@ clear all
 close all
 
 % assign value
-N = 7; % number of servers
-K = 2; % number of messages
+N = 3; % number of servers
+K = 10; % number of messages
 r_diff = [0.1 0.3 0.6]; % homo weights
 r_same = [0.333 0.333 0.333]; % hetero weights
 
 % Choice of different epsilons
 num_epoch = 40; % number of epochs
-eps = linspace(0, 10, num_epoch);
+eps = linspace(0, 15, num_epoch);
 
 % calculate lower/upper bound of Download cost
 D_low = zeros(size(eps)); % lower bound of D
@@ -29,7 +29,8 @@ DP_cost_homo = zeros(size(eps)); % Download cost D
 
 %% Numerically solve optimal D vs DP leakage
 for d = 1:length(eps)
-    [DP_cost_homo(d)] = auto_compute_minD_DP(N, K,eps(d));
+    % [DP_cost_homo(d)] = auto_compute_minD_DP(N, K,eps(d));
+    DP_cost_homo(d) = N/(N-1) - exp(eps(d)*(K-1)) / (N-1) / (exp(eps(d))+N-1)^(K-1);
 end
 
 %% Calculate the gap
@@ -55,7 +56,7 @@ plot(eps,Gap_Ravi_TSC,'--','LineWidth',1.5)
 
 grid on
 xlabel('User Privacy Leakage ($\epsilon$)','Interpreter','latex')
-ylim([1 1.25])
+%ylim([1 1.25])
 ylabel('Download Cost $D$','Interpreter','latex')
 legend("Upper bound", "Lower bound", "TSC download", "TSC / low", "Ravi / low", "Ravi / TSC")
-title("Homogeneous case: N = 5, K = 3")
+title("Homogeneous case: N = 3, K = 10")
