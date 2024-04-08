@@ -11,7 +11,7 @@ r_diff = [0.1 0.3 0.6]; % homo weights
 r_same = [0.333 0.333 0.333]; % hetero weights
 
 % Choice of different epsilons
-num_epoch = 40; % number of epochs
+num_epoch = 100; % number of epochs
 eps = linspace(0, 15, num_epoch);
 
 % calculate lower/upper bound of Download cost
@@ -30,7 +30,8 @@ DP_cost_homo = zeros(size(eps)); % Download cost D
 %% Numerically solve optimal D vs DP leakage
 for d = 1:length(eps)
     % [DP_cost_homo(d)] = auto_compute_minD_DP(N, K,eps(d));
-    DP_cost_homo(d) = N/(N-1) - exp(eps(d)*(K-1)) / (N-1) / (exp(eps(d))+N-1)^(K-1);
+    % DP_cost_homo(d) = N/(N-1) - exp(eps(d)*(K-1)) / (N-1) / (exp(eps(d))+N-1)^(K-1);
+    [DP_cost_homo(d)] = auto_compute_minD_DP_LPreduced(N, K, eps(d));
 end
 
 %% Calculate the gap
