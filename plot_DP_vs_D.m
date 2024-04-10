@@ -6,13 +6,13 @@ close all
 
 % assign value
 N = 3; % number of servers
-K = 10; % number of messages
+K = 3; % number of messages
 r_diff = [0.1 0.3 0.6]; % homo weights
 r_same = [0.333 0.333 0.333]; % hetero weights
 
 % Choice of different epsilons
 num_epoch = 100; % number of epochs
-eps = linspace(0, 15, num_epoch);
+eps = linspace(0, 14, num_epoch);
 
 % calculate lower/upper bound of Download cost
 D_low = zeros(size(eps)); % lower bound of D
@@ -51,13 +51,13 @@ plot(eps,DP_cost_homo,'LineWidth',2)
 hold on
 plot(eps,Gap_TSC_low,'--','LineWidth',1.5)
 hold on
-plot(eps,Gap_Ravi_low,'--','LineWidth',1.5)
-hold on
+% plot(eps,Gap_Ravi_low,'--','LineWidth',1.5)
+% hold on
 plot(eps,Gap_Ravi_TSC,'--','LineWidth',1.5)
 
 grid on
 xlabel('User Privacy Leakage ($\epsilon$)','Interpreter','latex')
-%ylim([1 1.25])
+ylim([1 1.444])
 ylabel('Download Cost $D$','Interpreter','latex')
-legend("Upper bound", "Lower bound", "TSC download", "TSC / low", "Ravi / low", "Ravi / TSC")
-title("Homogeneous case: N = 3, K = 10")
+legend("Upper bound", "Lower bound", "TSC download", "TSC / low", "Ravi / TSC")
+title("N = 3, K = 3")
