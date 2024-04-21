@@ -69,9 +69,9 @@ plot(MaxL_leakage_homo_3,D,'-*','LineWidth',1.2)
 
 grid on
 xlim([1 1.7])
-xlabel('Max-L constraint $\rho$','Interpreter','latex')
+xlabel('Max-L privacy $\rho$','Interpreter','latex')
 ylabel('Download cost $D$','Interpreter','latex')
-legend("TSC (w/o p#)", "Symmetric WPIR#", "Optimal WPIR#")
+legend("TSC (without p#)", "Optimized reduced WPIR#", "WPIR# - optimized for homogeneity")
 title("Homogeneous case: N = 3, K = 2")
 
 %% plot hetero
@@ -88,7 +88,7 @@ plot(MaxL_leakage_hete_4,D,'-.','LineWidth',1.2)
 
 grid on
 xlim([1 1.42])
-xlabel('Max-L constraint $\rho$','Interpreter','latex')
+xlabel('Max-L privacy $\rho$','Interpreter','latex')
 ylabel('Download cost $D$','Interpreter','latex')
-legend("TSC (w/o p#)", "Symmetric WPIR#", "Optimal WPIR#", "Numerical solution")
+legend("TSC (without p#)", "Optimized reduced WPIR#", "WPIR# - optimized for heterogeneity", "Numerically optimized WPIR#")
 title("Heterogeneous case: N = 3, K = 2")

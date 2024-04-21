@@ -7,7 +7,7 @@ close all
 % assign value
 N = 3;
 K = 2;
-r_diff = [0.1 0.3 0.6];
+r_diff = [0.05 0.05 0.9];
 r_same = [0.333 0.333 0.333];
 
 % calculate D*
@@ -17,7 +17,7 @@ for i = 1:K
 end
 
 % D = 1.00:0.02:D_star;
-D = linspace(1.00,D_star,17);
+D = linspace(1.00,D_star,20);
 
 % create initial matirx 
 MI_leakage_homo_1 = zeros(size(D));
@@ -57,7 +57,7 @@ for d = 1:length(D)
     [MI_leakage_hete_3(d), p_hete_rsame_opt] = auto_compute_MI_adjustp(N,K,r_diff,D(d),4,1);
 
     % line 4 : weight diff optimum with # 
-    [MI_leakage_hete_4(d), p_hete_rsame_opt] = auto_compute_MI_adjustp(N,K,r_diff,D(d),4,1);
+    [MI_leakage_hete_4(d), p_hete_rsame_opt] = auto_compute_MI_adjustp(N,K,r_diff,D(d),0,1);
 end
 
 %% plot homo
@@ -74,9 +74,9 @@ plot(MI_leakage_homo_4,D,'-.','LineWidth',1.2)
 
 grid on
 xlim([0 0.3])
-xlabel('MI constraint $\rho$','Interpreter','latex')
+xlabel('MI privacy $\rho$','Interpreter','latex')
 ylabel('Download cost $D$','Interpreter','latex')
-legend("TSC (w/o p#)", "Symmetric WPIR#", "Optimal WPIR#", "Numerical solution")
+legend("TSC (without p#)", "Optimized reduced WPIR#", "WPIR# - optimized for homogeneity", "Numerically optimized WPIR#")
 title("Homogeneous case: N = 3, K = 2")
 
 %% plot hetero
@@ -93,7 +93,7 @@ plot(MI_leakage_hete_4,D,'-.','LineWidth',1.2)
 
 grid on
 xlim([0 0.08])
-xlabel('MI constraint $\rho$','Interpreter','latex')
+xlabel('MI privacy $\rho$','Interpreter','latex')
 ylabel('Download cost $D$','Interpreter','latex')
-legend("TSC (w/o p#)", "Symmetric WPIR#", "Optimal WPIR#", "Numerical solution")
+legend("TSC (without p#)", "Optimized reduced WPIR#", "WPIR# - optimized for homogeneity", "Numerically optimized WPIR#")
 title("Heterogeneous case: N = 3, K = 2")
