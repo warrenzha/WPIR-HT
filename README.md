@@ -11,7 +11,7 @@ This repository contains open-source code for the paper [Weakly Private Informat
 - plot_MI_vs_D -------------------- Plot MI (leakage, download) region
 - leakyPIR_LP_general ------------- linear programming in solving Leaky PIR 
 
-For example, to reproduce experimental results of Max-L, run 'plot_maxL_vs_D.m'.
+For example, to reproduce experimental results of Max-L, go to './src' and run 'plot_maxL_vs_D.m'.
 
 ## Citing
 
